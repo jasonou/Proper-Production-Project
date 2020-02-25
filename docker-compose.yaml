@@ -28,6 +28,6 @@ services:
     volumes:
       - ./server:/app/
       - /app/node_modules
-    command: ["sh", "-c", "npm install && pm2 start --no-daemon --watch --ignore-watch='logs node_modules' npm -- run dev"]
+    command: ["sh", "-c", "npm install && npm run pm2"]
     depends_on:
       - redis

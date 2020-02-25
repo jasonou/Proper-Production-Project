@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Backend Starter",
   "scripts": {
-    "prelint": "eslint  . --fix",
-    "lint": "eslint .",
+    "lint": "eslint  . --fix",
     "start": "node --optimize-for-size --max-old-space-size=460 --gc-interval=100 ./bin/start.js",
     "start:inspect": "node --optimize-for-size --max-old-space-size=460 --gc-interval=100 --inspect-brk=0.0.0.0:9229 ./bin/start.js",
+    "pm2": "pm2 start --no-daemon --watch --ignore-watch='logs node_modules' npm -- run dev",
     "dev": "npm run lint && npm run start",
     "dev:inspect": "npm run lint && npm run start:inspect"
   },
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "eslint": "6.8.0",
-    "eslint-config-google": "0.14.0"
+    "eslint-config-google": "0.14.0",
+    "pm2": "4.2.3"
   }
 }

@@ -5,7 +5,6 @@ WORKDIR /app
 
 ENV NODE_ENV production
 ENV PORT 3000
-RUN npm install pm2 -g
 
 COPY package*.json ./
 
