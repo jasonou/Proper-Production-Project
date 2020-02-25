@@ -1,2 +1,11 @@
-# Proper-Production-Project
-How to actually properly develop for dev and prod
+# Quick Start
+
+```
+docker-compose up <--build> <-d>
+
+docker-compose down <--rmi all> <-v>
+
+docker-compose logs -f <service-name>
+
+docker-compose exec <service-name> <command>
+```
