@@ -5,8 +5,10 @@
   "scripts": {
     "lint": "eslint  . --fix",
     "start": "node --optimize-for-size --max-old-space-size=460 --gc-interval=100 ./bin/start.js",
-    "start:inspect": "node --optimize-for-size --max-old-space-size=460 --gc-interval=100 --inspect-brk=0.0.0.0:9229 ./bin/start.js",
+    "start:inspect": "node --optimize-for-size --max-old-space-size=460 --gc-interval=100 --inspect-brk=0.0.0.0:$DEBUG_PORT ./bin/start.js",
     "pm2": "pm2 start --no-daemon --watch --ignore-watch='logs node_modules' npm -- run dev",
+    "pm2:inspect": "pm2 start --no-daemon --watch --ignore-watch='logs node_modules' npm -- run dev:inspect",
+    "pm2:monit": "pm2 monit",
     "dev": "npm run lint && npm run start",
     "dev:inspect": "npm run lint && npm run start:inspect"
   },
@@ -20,7 +22,8 @@
     "helmet": "3.21.2",
     "morgan": "1.9.1",
     "redis": "3.0.2",
-    "winston": "3.2.1"
+    "winston": "3.2.1",
+    "winston-daily-rotate-file": "4.4.2"
   },
   "devDependencies": {
     "eslint": "6.8.0",

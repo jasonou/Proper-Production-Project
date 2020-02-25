@@ -9,15 +9,17 @@ services:
       - 6379:$REDIS_PORT
     volumes:
       - ./redis/data:/data
-    command: ["redis-server", "--requirepass", $REDIS_PASSWORD]
+    command: ["redis-server", "--port", $REDIS_PORT, "--requirepass", $REDIS_PASSWORD]
 
   server:
     build:
       context: ./server
     environment:
+      LOG_LEVEL: $LOG_LEVEL
       HTTP_LOG_FORMAT: $HTTP_LOG_FORMAT
       NODE_ENV: $NODE_ENV
       PORT: $DEV_PORT
+      DEBUG_PORT: $DEBUG_PORT
       REDIS_HOST: $REDIS_HOST
       REDIS_PORT: $REDIS_PORT
       REDIS_PASSWORD: $REDIS_PASSWORD

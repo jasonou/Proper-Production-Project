@@ -1,28 +1,46 @@
 const winston = require('winston');
+require('winston-daily-rotate-file');
+const LOG_LEVEL = process.env.LOG_LEVEL || 'debug';
+
+let logFormat;
+if (process.env.NODE_ENV === 'production') {
+  logFormat = winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.align(),
+      winston.format.printf(
+          (info) => `${info.timestamp} ${info.level}: ${info.message}`
+      )
+  );
+} else {
+  logFormat = winston.format.combine(
+      winston.format.colorize(),
+      winston.format.timestamp(),
+      winston.format.align(),
+      winston.format.printf(
+          (info) => `${info.timestamp} ${info.level}: ${info.message}`
+      )
+  );
+}
 
 const options = {
   file: {
-    level: 'info',
-    name: 'file.info',
-    filename: `./logs/info.log`,
-    handleExceptions: true,
-    json: true,
-    maxsize: 5242880,
-    maxFiles: 100,
-    colorize: true,
+    level: LOG_LEVEL,
+    filename: `./logs/server-%DATE%.log`,
+    datePattern: 'YYYY-MM-DD',
+    zippedArchive: true,
+    maxSize: '20m',
+    maxFiles: '14d',
   },
   console: {
-    level: 'debug',
-    handleExceptions: true,
-    json: false,
-    colorize: true,
+    level: 'info',
   },
 };
 
 const logger = winston.createLogger({
+  format: logFormat,
   transports: [
     new winston.transports.Console(options.console),
-    new winston.transports.File(options.file),
+    new winston.transports.DailyRotateFile(options.file),
   ],
   exitOnError: false,
 });
