@@ -15,8 +15,6 @@ services:
     build:
       context: ./server
     environment:
-      LOG_LEVEL: $LOG_LEVEL
-      HTTP_LOG_FORMAT: $HTTP_LOG_FORMAT
       NODE_ENV: $NODE_ENV
       PORT: $DEV_PORT
       DEBUG_PORT: $DEBUG_PORT

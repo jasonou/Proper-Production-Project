@@ -1,46 +1,47 @@
-const winston = require('winston');
+const {createLogger, format, transports} = require('winston');
+const {combine, timestamp, printf, colorize, json, label} = format;
 require('winston-daily-rotate-file');
-const LOG_LEVEL = process.env.LOG_LEVEL || 'debug';
+const path = require('path');
 
-let logFormat;
+const LOG_LEVEL = (process.env.NODE_ENV === 'production') ? 'info' : 'debug';
+
+const messageFormat = printf(
+    (info) => `${info.timestamp} ${info.level} [${info.label}]: ${info.message}`
+);
+
+let fileFormat;
 if (process.env.NODE_ENV === 'production') {
-  logFormat = winston.format.combine(
-      winston.format.timestamp(),
-      winston.format.align(),
-      winston.format.printf(
-          (info) => `${info.timestamp} ${info.level}: ${info.message}`
-      )
+  fileFormat = combine(
+      json(),
+      messageFormat
   );
 } else {
-  logFormat = winston.format.combine(
-      winston.format.colorize(),
-      winston.format.timestamp(),
-      winston.format.align(),
-      winston.format.printf(
-          (info) => `${info.timestamp} ${info.level}: ${info.message}`
-      )
+  fileFormat = combine(
+      messageFormat
   );
 }
 
-const options = {
-  file: {
-    level: LOG_LEVEL,
-    filename: `./logs/server-%DATE%.log`,
-    datePattern: 'YYYY-MM-DD',
-    zippedArchive: true,
-    maxSize: '20m',
-    maxFiles: '14d',
-  },
-  console: {
-    level: 'info',
-  },
-};
-
-const logger = winston.createLogger({
-  format: logFormat,
+const logger = createLogger({
+  level: LOG_LEVEL,
+  format: combine(
+      label({label: path.basename(process.mainModule.filename)}),
+      timestamp({format: 'YYY-MM-DD HH:mm:ss'})
+  ),
   transports: [
-    new winston.transports.Console(options.console),
-    new winston.transports.DailyRotateFile(options.file),
+    new transports.Console({
+      format: combine(
+          colorize(),
+          messageFormat
+      ),
+    }),
+    new transports.DailyRotateFile({
+      filename: `./logs/${LOG_LEVEL}-%DATE%.log`,
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: '20m',
+      maxFile: '14d',
+      format: fileFormat,
+    }),
   ],
   exitOnError: false,
 });

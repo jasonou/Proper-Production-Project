@@ -14,8 +14,8 @@ const api = require('./src/api');
 const app = express();
 app.use(express.json());
 
-const HTTPS_LOG_FORMAT = process.env.HTTP_LOG_FORMAT || 'dev';
-app.use(morgan(HTTPS_LOG_FORMAT, {stream: logger.stream}));
+const LOG_FORMAT = (process.env.NODE_ENV === 'production') ? 'combined' : 'dev';
+app.use(morgan(LOG_FORMAT, {stream: logger.stream}));
 
 app.use(helmet());
 
