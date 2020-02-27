@@ -1,28 +1,17 @@
 const {createLogger, format, transports} = require('winston');
-const {combine, timestamp, printf, colorize, json, label} = format;
-require('winston-daily-rotate-file');
+const {combine, timestamp, printf, colorize, label} = format;
 const path = require('path');
 
 const LOG_LEVEL = (process.env.NODE_ENV === 'production') ? 'info' : 'debug';
 
 const messageFormat = printf(
-    (info) => `${info.timestamp} ${info.level} [${info.label}]: ${info.message}`
+    (info) =>
+      `[${info.timestamp}] [${info.level}] [${info.label}]: ${info.message}`
 );
-
-let fileFormat;
-if (process.env.NODE_ENV === 'production') {
-  fileFormat = combine(
-      json(),
-      messageFormat
-  );
-} else {
-  fileFormat = combine(
-      messageFormat
-  );
-}
 
 const logger = createLogger({
   level: LOG_LEVEL,
+  handleExceptions: true,
   format: combine(
       label({label: path.basename(process.mainModule.filename)}),
       timestamp({format: 'YYY-MM-DD HH:mm:ss'})
@@ -34,13 +23,11 @@ const logger = createLogger({
           messageFormat
       ),
     }),
-    new transports.DailyRotateFile({
-      filename: `./logs/${LOG_LEVEL}-%DATE%.log`,
-      datePattern: 'YYYY-MM-DD',
-      zippedArchive: true,
-      maxSize: '20m',
-      maxFile: '14d',
-      format: fileFormat,
+    new transports.File({
+      filename: `./logs/${LOG_LEVEL}.log`,
+      format: combine(
+          messageFormat
+      ),
     }),
   ],
   exitOnError: false,
