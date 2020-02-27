@@ -14,7 +14,7 @@ const logger = createLogger({
   handleExceptions: true,
   format: combine(
       label({label: path.basename(process.mainModule.filename)}),
-      timestamp({format: 'YYY-MM-DD HH:mm:ss'})
+      timestamp({format: 'YYYY-MM-DD HH:mm:ss'})
   ),
   transports: [
     new transports.Console({

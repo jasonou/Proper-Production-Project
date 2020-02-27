@@ -8,9 +8,26 @@ const redisConfig = {
 };
 
 const redisClient = redis.createClient(redisConfig);
+const redisConnection = `${redisConfig.host}:${redisConfig.port}`;
+
+redisClient.on('connect', () => {
+  logger.info(`[REDIS] [CONNECTING]: ${redisConnection}`);
+});
+
+redisClient.on('ready', () => {
+  logger.info(`[REDIS] [READY]: ${redisConnection}`);
+});
+
+redisClient.on('reconnecting', (res) => {
+  logger.info(`[REDIS] [RECONNECTING]: ${redisConnection}`);
+});
 
 redisClient.on('error', (err) => {
-  logger.error('[REDIS] [ERROR] ===== ', err);
+  logger.error(`[REDIS] [ERROR]: ${err}`);
+});
+
+redisClient.on('end', () => {
+  logger.info(`[REDIS] [END]: ${redisConnection}`);
 });
 
 module.exports = redisClient;

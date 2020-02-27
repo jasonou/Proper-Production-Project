@@ -46,7 +46,11 @@ module.exports = {
     return app;
   },
   stop(signal) {
-    logger.info(`[${signal}] Stopping Server...`);
-    server.close(() => logger.info(`[${signal}] Server Stopped...`));
+    server.close(() => {
+      logger.info(`[${signal}] Server Stopped...`);
+      redisClient.quit();
+      logger.info(`[${signal}] Redis Client Stopped...`);
+      process.exit(0);
+    });
   },
 };
