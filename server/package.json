@@ -4,8 +4,8 @@
   "description": "Backend Starter",
   "scripts": {
     "lint": "eslint  . --fix",
-    "start": "node --optimize-for-size --max-old-space-size=460 --gc-interval=100 ./bin/start.js",
-    "start:inspect": "node --optimize-for-size --max-old-space-size=460 --gc-interval=100 --inspect-brk=0.0.0.0:$DEBUG_PORT ./bin/start.js",
+    "start": "node --trace-sync-io --optimize-for-size --max-old-space-size=460 --gc-interval=100 ./bin/start.js",
+    "start:inspect": "node --trace-sync-io --optimize-for-size --max-old-space-size=460 --gc-interval=100 --inspect-brk=0.0.0.0:$DEBUG_PORT ./bin/start.js",
     "pm2": "pm2 start --no-daemon --watch --ignore-watch='logs node_modules' npm -- run dev",
     "pm2:inspect": "pm2 start --no-daemon --watch --ignore-watch='logs node_modules' npm -- run dev:inspect",
     "pm2:monit": "pm2 monit",
@@ -15,6 +15,7 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "compression": "1.7.4",
     "connect-redis": "4.0.4",
     "express": "4.17.1",
     "express-rate-limit": "5.1.1",

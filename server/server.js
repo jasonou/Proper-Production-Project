@@ -5,6 +5,7 @@ const logger = require('./src/utils/logger');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const session = require('express-session');
+const compression = require('compression');
 
 const redisClient = require('./src/utils/redis');
 const RedisStore = require('connect-redis')(session);
@@ -14,7 +15,10 @@ const api = require('./src/api');
 const app = express();
 app.use(express.json());
 
-const LOG_FORMAT = (process.env.NODE_ENV === 'production') ? 'combined' : 'dev';
+app.use(compression());
+
+const LOG_FORMAT =
+  (process.env.NODE_ENV === 'production') ? 'combined' : 'tiny';
 app.use(morgan(LOG_FORMAT, {stream: logger.stream}));
 
 app.use(helmet());
