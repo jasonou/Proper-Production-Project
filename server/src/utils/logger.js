@@ -2,7 +2,7 @@ const {createLogger, format, transports} = require('winston');
 const {combine, timestamp, printf, colorize, label} = format;
 const path = require('path');
 
-const LOG_LEVEL = (process.env.NODE_ENV === 'production') ? 'info' : 'debug';
+const LOG_LEVEL = (process.env.NODE_ENV === 'production') ? 'error' : 'debug';
 
 const messageFormat = printf(
     (info) =>
@@ -10,22 +10,14 @@ const messageFormat = printf(
 );
 
 const logger = createLogger({
-  level: LOG_LEVEL,
-  handleExceptions: true,
-  format: combine(
-      label({label: path.basename(process.mainModule.filename)}),
-      timestamp({format: 'YYYY-MM-DD HH:mm:ss'})
-  ),
   transports: [
     new transports.Console({
+      level: LOG_LEVEL,
+      handleExceptions: true,
       format: combine(
+          label({label: path.basename(process.mainModule.filename)}),
+          timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
           colorize(),
-          messageFormat
-      ),
-    }),
-    new transports.File({
-      filename: `./logs/${LOG_LEVEL}.log`,
-      format: combine(
           messageFormat
       ),
     }),
@@ -33,8 +25,12 @@ const logger = createLogger({
   exitOnError: false,
 });
 
-logger.stream = {
-  write: (message) => logger.info(message),
+logger.debugStream = {
+  write: (message) => logger.debug(message),
+};
+
+logger.errorStream = {
+  write: (message) => logger.error(message),
 };
 
 module.exports = logger;

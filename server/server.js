@@ -17,9 +17,15 @@ app.use(express.json());
 
 app.use(compression());
 
-const LOG_FORMAT =
-  (process.env.NODE_ENV === 'production') ? 'combined' : 'tiny';
-app.use(morgan(LOG_FORMAT, {stream: logger.stream}));
+const LOG_FORMAT = (process.env.NODE_ENV === 'production') ? 'combined' : 'dev';
+app.use(morgan(LOG_FORMAT, {
+  skip: (req, res) => res.statusCode < 400,
+  stream: logger.errorStream,
+}));
+app.use(morgan(LOG_FORMAT, {
+  skip: (req, res) => res.statusCode >= 400,
+  stream: logger.debugStream,
+}));
 
 app.use(helmet());
 
@@ -34,7 +40,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {secure: false},
-  store: new RedisStore({client: redisClient}),
+  store: new RedisStore({client: redisClient, ttl: 86400}),
 }));
 
 app.get('/', (req, res) => res.sendStatus(200));
@@ -51,9 +57,9 @@ module.exports = {
   },
   stop(signal) {
     server.close(() => {
-      logger.info(`[${signal}] Server Stopped...`);
+      logger.debug(`[${signal}] Server Stopped...`);
       redisClient.quit();
-      logger.info(`[${signal}] Redis Client Stopped...`);
+      logger.debug(`[${signal}] Redis Client Stopped...`);
       process.exit(0);
     });
   },

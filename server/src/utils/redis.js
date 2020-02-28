@@ -2,32 +2,18 @@ const redis = require('redis');
 const logger = require('./logger');
 
 const redisConfig = {
-  host: process.env.REDIS_HOST || 'localhost',
-  port: process.env.REDIS_PORT || '6379',
-  password: process.env.REDIS_PASSWORD || 'password',
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+  password: process.env.REDIS_PASSWORD,
 };
 
 const redisClient = redis.createClient(redisConfig);
-const redisConnection = `${redisConfig.host}:${redisConfig.port}`;
+const redisCon = `${redisConfig.host}:${redisConfig.port}`;
 
-redisClient.on('connect', () => {
-  logger.info(`[REDIS] [CONNECTING]: ${redisConnection}`);
-});
-
-redisClient.on('ready', () => {
-  logger.info(`[REDIS] [READY]: ${redisConnection}`);
-});
-
-redisClient.on('reconnecting', (res) => {
-  logger.info(`[REDIS] [RECONNECTING]: ${redisConnection}`);
-});
-
-redisClient.on('error', (err) => {
-  logger.error(`[REDIS] [ERROR]: ${err}`);
-});
-
-redisClient.on('end', () => {
-  logger.info(`[REDIS] [END]: ${redisConnection}`);
-});
+redisClient.on('connect', () => logger.debug(`[REDIS] [CONNECTING]`));
+redisClient.on('ready', () => logger.info(`[REDIS] [READY]: ${redisCon}`));
+redisClient.on('reconnecting', () => logger.debug(`[REDIS] [RECONNECTING]`));
+redisClient.on('error', (err) => logger.error(`[REDIS] [ERROR]: ${err}`));
+redisClient.on('end', () => logger.debug(`[REDIS] [END]: ${redisCon}`));
 
 module.exports = redisClient;
