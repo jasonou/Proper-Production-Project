@@ -51,7 +51,7 @@ let server;
 module.exports = {
   start(port) {
     server = app.listen(port, () => {
-      logger.info(`[${process.env.NODE_ENV}] Server Started on Port: ${port}`);
+      console.log(`[${process.env.NODE_ENV}] Server Started on Port: ${port}`);
     });
     return app;
   },

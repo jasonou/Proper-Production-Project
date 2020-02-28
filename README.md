@@ -1,9 +1,9 @@
-# Quick Start
+# Dev Quick Start
 
 ```
-docker-compose up <--build> <-d>
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up <--build> <-d>
 
-docker-compose down <--rmi all> <-v>
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml down <--rmi all> <-v>
 
 docker-compose logs -f <service-name>
 

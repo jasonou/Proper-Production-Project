@@ -3,8 +3,6 @@ version: '3.7'
 services:
 
   redis:
-    build:
-      context: ./redis
     ports:
       - 6379:$REDIS_PORT
     volumes:
@@ -15,7 +13,7 @@ services:
     build:
       context: ./server
     environment:
-      NODE_ENV: $NODE_ENV
+      NODE_ENV: development
       PORT: $NODE_SERVER_PORT
       DEBUG_PORT: $NODE_DEBUG_PORT
       REDIS_HOST: $REDIS_HOST
@@ -29,5 +27,3 @@ services:
       - ./server:/app/
       - /app/node_modules
     command: ["sh", "-c", "npm install && npm run pm2"]
-    depends_on:
-      - redis
