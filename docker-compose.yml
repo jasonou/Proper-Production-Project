@@ -4,7 +4,12 @@ services:
 
   redis:
     image: redis:5.0-alpine
+    volumes:
+      - /data
+    command: ["redis-server", "--requirepass", $REDIS_PASSWORD]
 
   server:
+    build:
+      context: ./server
     depends_on:
       - redis

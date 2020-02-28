@@ -29,18 +29,22 @@ app.use(morgan(LOG_FORMAT, {
 
 app.use(helmet());
 
+const MINUTES_IN_MS = 15 * 60 * 1000;
+const REQUEST_LIMIT = 200;
 app.use(rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 200,
+  windowMs: MINUTES_IN_MS,
+  max: REQUEST_LIMIT,
 }));
 
+
+const SESSION_TTL_IN_SECONDS = 24 * 60 * 60;
 app.use(session({
   secret: process.env.REDIS_SESSION_SECRET || 'redisSessionSecret',
   name: '_serverSession',
   resave: false,
   saveUninitialized: true,
   cookie: {secure: false},
-  store: new RedisStore({client: redisClient, ttl: 86400}),
+  store: new RedisStore({client: redisClient, ttl: SESSION_TTL_IN_SECONDS}),
 }));
 
 app.get('/', (req, res) => res.sendStatus(200));
@@ -49,9 +53,12 @@ app.use(api);
 
 let server;
 module.exports = {
-  start(port) {
-    server = app.listen(port, () => {
-      console.log(`[${process.env.NODE_ENV}] Server Started on Port: ${port}`);
+  start() {
+    const NODE_PORT = 3000;
+    server = app.listen(NODE_PORT, () => {
+      console.log(
+          `[${process.env.NODE_ENV}] Server Started on Port: ${NODE_PORT}`
+      );
     });
     return app;
   },

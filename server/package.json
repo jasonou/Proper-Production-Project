@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "eslint  . --fix",
     "start": "node --trace-sync-io --optimize-for-size --max-old-space-size=460 --gc-interval=100 ./bin/start.js",
-    "start:inspect": "node --trace-sync-io --optimize-for-size --max-old-space-size=460 --gc-interval=100 --inspect-brk=0.0.0.0:$DEBUG_PORT ./bin/start.js",
+    "start:inspect": "node --trace-sync-io --optimize-for-size --max-old-space-size=460 --gc-interval=100 --inspect-brk=0.0.0.0:9229 ./bin/start.js",
     "pm2": "pm2 start --no-daemon --watch --ignore-watch='logs node_modules' npm -- run dev",
     "pm2:inspect": "pm2 start --no-daemon --watch --ignore-watch='logs node_modules' npm -- run dev:inspect",
     "pm2:monit": "pm2 monit",
