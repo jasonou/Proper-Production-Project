@@ -29,22 +29,21 @@ app.use(morgan(LOG_FORMAT, {
 
 app.use(helmet());
 
-const MINUTES_IN_MS = 15 * 60 * 1000;
+const FIFTEEN_MINUTES_IN_MS = 15 * 60 * 1000;
 const REQUEST_LIMIT = 200;
 app.use(rateLimit({
-  windowMs: MINUTES_IN_MS,
+  windowMs: FIFTEEN_MINUTES_IN_MS,
   max: REQUEST_LIMIT,
 }));
 
-
-const SESSION_TTL_IN_SECONDS = 24 * 60 * 60;
+const ONE_DAY_SESSION_TTL = 24 * 60 * 60;
 app.use(session({
   secret: process.env.REDIS_SESSION_SECRET || 'redisSessionSecret',
   name: '_serverSession',
   resave: false,
   saveUninitialized: true,
   cookie: {secure: false},
-  store: new RedisStore({client: redisClient, ttl: SESSION_TTL_IN_SECONDS}),
+  store: new RedisStore({client: redisClient, ttl: ONE_DAY_SESSION_TTL}),
 }));
 
 app.get('/', (req, res) => res.sendStatus(200));
