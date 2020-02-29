@@ -7,5 +7,3 @@ services:
       NODE_ENV: production
       REDIS_SESSION_SECRET: $REDIS_SESSION_SECRET
       REDIS_URL: redis://redis:6379
-    ports:
-      - 3000:3000
