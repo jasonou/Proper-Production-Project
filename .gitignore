@@ -1,3 +1,7 @@
+# nginx
+nginx/*.crt
+nginx/*.key
+
 # Logs
 logs
 *.log
