@@ -6,7 +6,7 @@ const LOG_LEVEL = (process.env.NODE_ENV === 'production') ? 'error' : 'debug';
 
 const messageFormat = printf(
     (info) =>
-      `[${info.timestamp}] [${info.level}] [${info.label}]: ${info.message}`
+      `[${info.timestamp}] [${info.level}] [${info.label}]: ${info.message}`,
 );
 
 const logger = createLogger({
@@ -18,7 +18,7 @@ const logger = createLogger({
           label({label: path.basename(process.mainModule.filename)}),
           timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
           colorize(),
-          messageFormat
+          messageFormat,
       ),
     }),
   ],

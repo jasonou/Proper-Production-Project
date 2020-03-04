@@ -18,6 +18,7 @@ services:
     environment:
       - NODE_ENV=development
       - REDIS_SESSION_SECRET=$REDIS_SESSION_SECRET
+      - MONGO_URI=mongodb://$DB_USER:$DB_PASS@mongo:27017
     ports:
       - 3000:3000
       - 9229:9229

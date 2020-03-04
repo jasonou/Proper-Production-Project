@@ -8,5 +8,8 @@
     "browser": true,
     "node": true
   },
-  "rules": {}
+  "rules": {},
+  "parserOptions": {
+    "ecmaVersion": 8
+  }
 }

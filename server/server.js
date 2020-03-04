@@ -10,6 +10,8 @@ const compression = require('compression');
 const redisClient = require('./src/utils/redis');
 const RedisStore = require('connect-redis')(session);
 
+require('./src/utils/db');
+
 const api = require('./src/api');
 
 const app = express();
@@ -56,7 +58,7 @@ module.exports = {
     const NODE_PORT = 3000;
     server = app.listen(NODE_PORT, () => {
       console.log(
-          `[${process.env.NODE_ENV}] Server Started on Port: ${NODE_PORT}`
+          `[${process.env.NODE_ENV}] Server Started on Port: ${NODE_PORT}`,
       );
     });
     return app;
